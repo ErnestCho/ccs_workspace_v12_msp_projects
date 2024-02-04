@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?ccsproject version="1.0"?>
+<projectOptions>
+	<ccsVersion value="9.1.0"/>
+	<deviceVariant value="MSP430FR2633"/>
+	<deviceFamily value="MSP430"/>
+	<deviceEndianness value="little"/>
+	<codegenToolVersion value="18.12.2.LTS"/>
+	<isElfFormat value="true"/>
+	<linkerCommandFile value="lnk_msp430fr2633.cmd"/>
+	<rts value="libc.a"/>
+	<createSlaveProjects value=""/>
+	<templateProperties value="id=msp430fr2633_captivate_3pin.projectspec.msp430fr2633_captivate_3pin"/>
+	<origin value="E:/Working/CCS_Workspace/workspace_v9_msp430/msp430fr2633_captivate_LP50xx_6x8x6"/>
+	<filesToOpen value=""/>
+	<connection value="common/targetdb/connections/TIMSP430-USB.xml"/>
+	<isTargetManual value="false"/>
+</projectOptions>

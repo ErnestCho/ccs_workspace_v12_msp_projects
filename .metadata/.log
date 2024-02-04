@@ -2074,3 +2074,223 @@ java.net.UnknownHostException: software-dl.ti.com
 	at org.eclipse.ecf.provider.filetransfer.httpclient5.HttpClientFileSystemBrowser.runRequest(HttpClientFileSystemBrowser.java:251)
 	at org.eclipse.ecf.provider.filetransfer.browse.AbstractFileSystemBrowser$DirectoryJob.run(AbstractFileSystemBrowser.java:71)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2024-02-04 17:14:18.790 -----------------------------------------------
+eclipse.buildId=4.23.0.I20220308-0310
+java.version=11.0.13
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Framework arguments:  -product com.ti.ccstudio.branding.product -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product com.ti.ccstudio.branding.product -data E:\Working\CCS_Workspace\workspace_v12_msp_projects -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 1 0 2024-02-04 17:14:39.346
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 1 0 2024-02-04 17:14:39.363
+!MESSAGE debugServerDir=C:/ti/ccs1240/ccs/ccs_base/DebugServer
+
+!ENTRY org.eclipse.ui.workbench 4 2 2024-02-04 17:16:27.389
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.ui.workbench".
+!STACK 0
+java.lang.NullPointerException
+	at com.ti.ccstudio.project.core.internal.ProjectCorePlugin.log(ProjectCorePlugin.java:277)
+	at com.ti.ccstudio.buildmodel.BuildModelLoader.loadFamilyDefinition(BuildModelLoader.java:235)
+	at com.ti.ccstudio.buildmodel.BuildModelLoader.buildDefsLoaded(BuildModelLoader.java:129)
+	at com.ti.ccstudio.buildmodel.BuildModelLoader.buildDefsLoaded(BuildModelLoader.java:123)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.loadExtensionsSynchronized(ManagedBuildManager.java:2140)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.loadExtensions(ManagedBuildManager.java:2053)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.getExtensionBuilderMapInternal(ManagedBuildManager.java:449)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.getExtensionBuilder(ManagedBuildManager.java:644)
+	at com.ti.ccstudio.buildmodel.BuildModelLoader.initialize(BuildModelLoader.java:104)
+	at com.ti.ccstudio.project.ui.internal.ProjectUIStartup.earlyStartup(ProjectUIStartup.java:36)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:79)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:55)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.internal.Workbench$40.run(Workbench.java:2667)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.ui 4 0 2024-02-04 17:16:27.413
+!MESSAGE Unable to execute early startup code for the org.eclipse.ui.IStartup extension contributed by the 'com.ti.ccstudio.project.ui' plug-in.
+!STACK 0
+java.lang.NullPointerException
+	at com.ti.ccstudio.project.core.internal.ProjectCorePlugin.log(ProjectCorePlugin.java:277)
+	at com.ti.ccstudio.buildmodel.BuildModelLoader.loadFamilyDefinition(BuildModelLoader.java:235)
+	at com.ti.ccstudio.buildmodel.BuildModelLoader.buildDefsLoaded(BuildModelLoader.java:129)
+	at com.ti.ccstudio.buildmodel.BuildModelLoader.buildDefsLoaded(BuildModelLoader.java:123)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.loadExtensionsSynchronized(ManagedBuildManager.java:2140)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.loadExtensions(ManagedBuildManager.java:2053)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.getExtensionBuilderMapInternal(ManagedBuildManager.java:449)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.getExtensionBuilder(ManagedBuildManager.java:644)
+	at com.ti.ccstudio.buildmodel.BuildModelLoader.initialize(BuildModelLoader.java:104)
+	at com.ti.ccstudio.project.ui.internal.ProjectUIStartup.earlyStartup(ProjectUIStartup.java:36)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:79)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:55)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.ui.internal.Workbench$40.run(Workbench.java:2667)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2024-02-04 17:49:00.078 -----------------------------------------------
+eclipse.buildId=4.23.0.I20220308-0310
+java.version=11.0.13
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Framework arguments:  -product com.ti.ccstudio.branding.product -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product com.ti.ccstudio.branding.product -data E:\Working\CCS_Workspace\workspace_v12_msp_projects -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 1 0 2024-02-04 17:49:08.494
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 1 0 2024-02-04 17:49:08.520
+!MESSAGE debugServerDir=C:/ti/ccs1240/ccs/ccs_base/DebugServer
+
+!ENTRY com.ti.ccstudio.ui 1 0 2024-02-04 17:49:46.657
+!MESSAGE CCS IDE session started!
+	CCS build: 12.4.0.00007
+	CCS location: C:/ti/ccs1240/ccs
+	Workspace location: E:/Working/CCS_Workspace/workspace_v12_msp_projects
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.119
+!MESSAGE constructor
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.120
+!MESSAGE done with directories
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.120
+!MESSAGE loading ti_logger
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.123
+!MESSAGE Platform os: win32
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.124
+!MESSAGE loading cToolsIF
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.162
+!MESSAGE loading cTools
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.199
+!MESSAGE loading TraceFactory
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.233
+!MESSAGE loading sqlite3
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.270
+!MESSAGE loading CloudTrace
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2024-02-04 17:49:47.412
+!MESSAGE CloudTrace interface loaded
+
+!ENTRY com.ti.ccstudio.project.ui.webcontent 1 0 2024-02-04 17:49:47.614
+!MESSAGE CCS HTTP adapter started! [ccs.port:50500] - Open 'http://localhost:50500/ide' in web browser to see listing of available APIs...
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:49:50.168
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2linux/artifacts.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:49:51.460
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2win32/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:49:53.864
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2linux/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:49:56.073
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2mac/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:49:58.150
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2linux/artifacts.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:49:59.859
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/CCSv5/Updates/, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:50:00.964
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2win32/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:50:02.889
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2linux/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:50:04.787
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2mac/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:50:06.049
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/CCSv5/Updates/, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:50:07.787
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2linux/artifacts.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:50:09.046
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2win32/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:50:10.537
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2linux/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:50:11.472
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2linux/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.core 4 0 2024-02-04 17:51:23.790
+!MESSAGE Provisioning exception
+!STACK 1
+org.eclipse.equinox.p2.core.ProvisionException: No repository found at https://software-dl.ti.com/ccs/esd/CCSv12/Updates/CCS12.0.0.00009_update.
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.fail(AbstractRepositoryManager.java:405)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:709)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository.addChild(CompositeMetadataRepository.java:171)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository.<init>(CompositeMetadataRepository.java:113)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.load(CompositeMetadataRepositoryFactory.java:124)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:63)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:787)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:685)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:152)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:130)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:78)
+!SUBENTRY 1 org.eclipse.equinox.p2.metadata.repository 4 1000 2024-02-04 17:51:23.791
+!MESSAGE No repository found at https://software-dl.ti.com/ccs/esd/CCSv12/Updates/CCS12.0.0.00009_update.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:51:37.338
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2mac/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:51:38.514
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/codegen/Updates/p2win32/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2024-02-04 17:51:40.009
+!MESSAGE Using unsafe http transport to retrieve http://software-dl.ti.com/dsps/dsps_public_sw/sdo_ccstudio/CCSv5/Updates/, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 17:53:33.332
+!MESSAGE Indexed 'msp430g2553_tps61169_tps92360_gardening_LED' (1 sources, 5 headers) in 0.456 sec: 174 declarations; 605 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 17:59:44.015
+!MESSAGE Indexed 'msp430g2553_UltraSound_JumpJump' (1 sources, 5 headers) in 0.284 sec: 174 declarations; 605 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 18:02:29.753
+!MESSAGE Indexed 'msp430g2553_TMP431_dual_temperature_sensor' (1 sources, 5 headers) in 0.064 sec: 174 declarations; 605 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 18:10:00.038
+!MESSAGE Indexed 'msp430g2553_LP50xx_RGB_led_string' (1 sources, 5 headers) in 0.142 sec: 174 declarations; 605 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 18:14:01.984
+!MESSAGE Indexed 'msp430g2553_LP50xx_4ea_Christmas_tree' (1 sources, 5 headers) in 0.06 sec: 174 declarations; 605 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 18:15:15.896
+!MESSAGE Indexed 'msp430g2553_HDCxxxx_Humidity_Sensor_OLED_disp' (1 sources, 5 headers) in 0.066 sec: 174 declarations; 605 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 18:24:51.722
+!MESSAGE Indexed 'msp430fr2476_Servo_motor_PWM_turtle_feeding_machine' (1 sources, 6 headers) in 0.825 sec: 928 declarations; 1,581 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 18:27:12.072
+!MESSAGE Indexed 'msp430fr2522_HDCxxxx_Humidity_sensor_OLED_disp' (15 sources, 111 headers) in 2 sec: 6,133 declarations; 9,858 references; 0 unresolved inclusions; 12 syntax errors; 1 unresolved names (0.0063%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 20:22:06.597
+!MESSAGE Indexed 'msp430fr2522_touch_timer_game' (14 sources, 110 headers) in 2.41 sec: 6,224 declarations; 9,982 references; 0 unresolved inclusions; 11 syntax errors; 1 unresolved names (0.0062%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 21:14:09.169
+!MESSAGE Indexed 'msp430fr2522_LP50xx_9ch_led_string_button' (2 sources, 17 headers) in 0.547 sec: 923 declarations; 2,408 references; 0 unresolved inclusions; 3 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 21:58:29.357
+!MESSAGE Indexed 'msp430fr2522_LP50xx_9ch_led_string' (13 sources, 106 headers) in 2.91 sec: 6,811 declarations; 11,240 references; 0 unresolved inclusions; 9 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.ui 2 2 2024-02-04 22:09:01.099
+!MESSAGE com.ti.ccstudio.system.setup.ui.views.TargetConfigurationView: Deprecated relationship "fast" should be converted to "stack".
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 22:21:28.255
+!MESSAGE Indexed 'msp430fr2633_captivate_LP50xx_6x8x6' (11 sources, 97 headers) in 2.18 sec: 6,113 declarations; 10,880 references; 0 unresolved inclusions; 8 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-04 22:25:50.227
+!MESSAGE Indexed 'msp430fr2633_captivate_LP50xx_6x8x6_matrix' (11 sources, 97 headers) in 1.91 sec: 6,113 declarations; 10,880 references; 0 unresolved inclusions; 8 syntax errors; 0 unresolved names (0%)

@@ -2294,3 +2294,9 @@ org.eclipse.equinox.p2.core.ProvisionException: No repository found at https://s
 
 !ENTRY org.eclipse.cdt.core 1 0 2024-02-04 22:25:50.227
 !MESSAGE Indexed 'msp430fr2633_captivate_LP50xx_6x8x6_matrix' (11 sources, 97 headers) in 1.91 sec: 6,113 declarations; 10,880 references; 0 unresolved inclusions; 8 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-06 01:12:22.569
+!MESSAGE Indexed 'FR2676PTT_wheel_sliders' (10 sources, 96 headers) in 1.55 sec: 7,053 declarations; 10,360 references; 0 unresolved inclusions; 5 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-02-06 01:13:29.847
+!MESSAGE Indexed 'msp430fr2676PTT_wheel_sliders' (10 sources, 96 headers) in 1.32 sec: 7,053 declarations; 10,360 references; 0 unresolved inclusions; 5 syntax errors; 0 unresolved names (0%)

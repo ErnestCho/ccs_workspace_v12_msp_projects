@@ -4,4 +4,18 @@
 	</section>
 	<section name="com.ti.ccstudio.project.ui.internal.properties.DynamicPropertiesPageManager">
 	</section>
+	<section name="com.ti.ccstudio.project.ui.internal.wizards.importexport.ProjectImportPage">
+		<item key="CCS.BROWSE_DIRS_FILTER" value="E:\Working\Captivate_Workspace\FR2676PTT_wheel_sliders\src"/>
+		<item key="CCS.COPY_INTO_WORKSPACE" value="true"/>
+		<item key="CCS.IMPORT_REFERENCED_PROJECTS" value="false"/>
+		<item key="CCS.IMPORT_FROM_ARCHIVE" value="false"/>
+	</section>
+	<section name="com.ti.ccstudio.project.ui.internal.wizards.project.ProjectSettingsPage">
+		<item key="CCS.TARGET" value="devices/MSP430FR2476"/>
+		<section name="1">
+			<item key="CCS.OUTPUT_TYPE" value="executable"/>
+			<item key="CCS.LINKER_COMMAND_FILE" value="null"/>
+			<item key="CCS.RUNTIME_SUPPORT_LIB" value="null"/>
+		</section>
+	</section>
 </section>

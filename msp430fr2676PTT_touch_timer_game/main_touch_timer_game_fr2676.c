@@ -53,6 +53,11 @@
 #include "CAPT_App.h"                    // CapTIvate Application Code
 #include "CAPT_BSP.h"                    // CapTIvate EVM Board Support Package
 
+#include "common.h"
+#include "stdint.h"
+#include "ssd1306.h"
+//#include "lp5012.h"
+#include "string.h"
 
 //
 // switch related
@@ -248,6 +253,34 @@ void ButtonEventHandler(tSensor *pSensor)
 }
 
 
+//#define CONST   //const
+
+CONST char str_mode[] = "game";               //5 : including null
+CONST char str_switch_info1[] = "game       count";    //17 : including null
+CONST char str_switch_info2[] = "game     execute";    //17 : including null
+CONST char str_main_dp1[] = "Touch Timer ";            //12 : including null
+CONST char str_main_dp2[] = "    running!";           //13 : including null
+CONST char str_main_dp3[] = "Want to run?";           //13 : including null
+
+CONST char str_game_mode[]  = "Select Game:";          // 12 : including null
+CONST char str_game[] = "Game :";                     // 7 : including null
+CONST char str_game_mode0[] = "1.Touch&Run";          // 12 : including null
+CONST char str_game_mode1[] = "2.Stop watch";           // 11 : including null
+CONST char str_game_cnt[] = "Game Cnt:";            // 12 : including null
+CONST char str_push_execute[] = "Push Execute";           // 13 : including null
+
+CONST char str_stop_stop[] = "stop        stop";        // 17
+CONST char str_executing[] = "Executing";                  // 10
+CONST char str_more[] = " more..";
+CONST char str_result[] =     "::Results::";                  // 10
+CONST char str_new_record[] = "New Record!";                  // 10
+CONST char str_top[] = "Top:";                  // 10
+CONST char str_now[] = "Now:";                  // 10
+CONST char str_previous[] = "Prv:";                  // 10
+
+CONST char str_touch_to_start[] = "touch to start";          // 14 : including null
+CONST char str_touch_to_stop[] = "touch & stop";          // 14 : including null
+
 
 void main(void)
 {
@@ -258,7 +291,7 @@ void main(void)
 	// to wake the MCU.
 	//
 	WDTCTL = WDTPW | WDTHOLD;
-	BSP_configureMCU();
+	BSP_configureMCU();             // need to initialize/modify by HW pin map.
 
 
     GPIO_SW1_SW2_Interrupt_Set();
@@ -267,6 +300,12 @@ void main(void)
      PM5CTL0 &= ~LOCKLPM5;
     __delay_cycles(10000);
 
+    // OLED initialization
+    i2c_init();                                 // initialize I2C to use with OLED
+
+    ssd1306_init();                             // Initialize SSD1306 OLED
+    ssd1306_clearDisplay();                     // Clear OLED display
+    delay_ms(1);
 
 
 	__bis_SR_register(GIE);
@@ -281,6 +320,15 @@ void main(void)
 	// Start the CapTIvate application
 	//
 	CAPT_appStart();
+
+    MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+    ssd1306_clearDisplay();
+    ssd1306_printString(0, 0, str_mode, FONT_6x8);
+    ssd1306_printString(0, 1, str_main_dp1, FONT_MS_GOTHIC8x16);
+    ssd1306_printString(0, 3, str_main_dp2, FONT_MS_GOTHIC8x16);
+    ssd1306_printString(0, 5, str_main_dp3, FONT_MS_GOTHIC8x16);
+    ssd1306_printString(0, 7, str_touch_to_start, FONT_6x8);
+    MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
 
 	//
 	// Background Loop

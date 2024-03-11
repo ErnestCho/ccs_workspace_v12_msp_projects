@@ -54,6 +54,54 @@
 #include "CAPT_BSP.h"                    // CapTIvate EVM Board Support Package
 
 
+//
+// switch related
+//
+uint8_t switch_status = 0;
+
+// SW1 = P2.0
+#define SW1_PORT_DIR            P2DIR
+#define SW1_PORT_OUT            P2OUT
+#define SW1_PORT_REN            P2REN
+#define SW1_PORT_IES            P2IES
+#define SW1_PORT_IE             P2IE
+#define SW1_PORT_IFG            P2IFG
+#define SW1_BIT                 BIT0
+
+// SW2 = P2.1
+#define SW2_PORT_DIR            P2DIR
+#define SW2_PORT_OUT            P2OUT
+#define SW2_PORT_REN            P2REN
+#define SW2_PORT_IES            P2IES
+#define SW2_PORT_IE             P2IE
+#define SW2_PORT_IFG            P2IFG
+#define SW2_BIT                 BIT1
+
+///////////////////////////////////////////////////////////////////////
+// GPIO Switch interrupt part
+///////////////////////////////////////////////////////////////////////
+
+// GPIO_P1InterruptSet() : external interrupt setup for P1
+// param : bits - multi-bits setup
+void GPIO_SW1_SW2_Interrupt_Set(void)
+{
+    SW1_PORT_DIR &= ~SW1_BIT;                         // port as Input
+    SW1_PORT_OUT |= SW1_BIT;                          // Configure P1 as pulled-up
+    SW1_PORT_REN |= SW1_BIT;                          // P1 pull-up register enable
+    SW1_PORT_IES &= ~SW1_BIT;                         // P1 edge, 0: low to high edge
+    SW1_PORT_IE  |= SW1_BIT;                          // P1 interrupt enabled
+    SW1_PORT_IFG &= ~SW1_BIT;                         // P1 IFG cleared
+
+    SW2_PORT_DIR &= ~SW2_BIT;
+    SW2_PORT_OUT |= SW2_BIT;                          // Configure P2.x as pulled-up
+    SW2_PORT_REN |= SW2_BIT;                          // P2.x pull-up register enable
+    SW2_PORT_IES &= ~SW2_BIT;                         // P2.x edge, 0: low to high edge
+    SW2_PORT_IE  |= SW2_BIT;                          // P2.x interrupt enabled
+    SW2_PORT_IFG &= ~SW2_BIT;                         // P2.x IFG cleared
+}
+
+
+
 typedef struct touch_bit_type {
     unsigned btn0_touch_on : 1;
     unsigned btn0_key_on : 1;
@@ -211,6 +259,16 @@ void main(void)
 	//
 	WDTCTL = WDTPW | WDTHOLD;
 	BSP_configureMCU();
+
+
+    GPIO_SW1_SW2_Interrupt_Set();
+    // Disable the GPIO power-on default high-impedance mode
+    // to activate previously configured port settings
+     PM5CTL0 &= ~LOCKLPM5;
+    __delay_cycles(10000);
+
+
+
 	__bis_SR_register(GIE);
 
     //
@@ -249,3 +307,50 @@ void main(void)
 		
 	} // End background loop
 } // End main()
+
+
+// Port 2 interrupt service routine
+#pragma vector=PORT2_VECTOR
+__interrupt void Port_2(void)
+{
+    // switch 1 detection ==> sw1 function : mode change
+    if(SW1_PORT_IFG & SW1_BIT)
+    {
+        SW1_PORT_IFG &= ~SW1_BIT;                         // Clear PORT IFG for SW1
+
+        if(switch_status == BIT1)   // do not operate if another switch pin is on operation
+        {
+            ;
+        }
+        else
+        {
+            switch_status |= BIT0;
+        }
+    }
+    else
+    {
+        SW1_PORT_IFG &= ~SW1_BIT;
+    }
+
+    // switch 2 detection ==> sw2 function : brightness control
+    if(SW2_PORT_IFG & SW2_BIT)
+    {
+        SW2_PORT_IFG &= ~SW2_BIT;                         // Clear PORT IFG for SW1
+
+        if(switch_status == BIT0)   // do not operate if another switch pin is on operation
+        {
+            ;
+        }
+        else
+        {
+            switch_status |= BIT1;
+        }
+    }
+    else
+    {
+        SW2_PORT_IFG &= ~SW2_BIT;
+    }
+
+}
+
+

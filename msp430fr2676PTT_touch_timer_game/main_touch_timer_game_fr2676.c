@@ -53,6 +53,154 @@
 #include "CAPT_App.h"                    // CapTIvate Application Code
 #include "CAPT_BSP.h"                    // CapTIvate EVM Board Support Package
 
+
+typedef struct touch_bit_type {
+    unsigned btn0_touch_on : 1;
+    unsigned btn0_key_on : 1;
+    unsigned btn1_touch_on : 1;
+    unsigned btn1_key_on : 1;
+    unsigned btn2_touch_on : 1;
+    unsigned btn2_key_on : 1;
+    unsigned change_occur : 1;
+}_tag_touch_bit_type;
+
+_tag_touch_bit_type touch_info = {
+    .btn0_touch_on = 0,
+    .btn0_key_on = 0,
+    .btn1_touch_on = 0,
+    .btn1_key_on = 0,
+    .btn2_touch_on = 0,
+    .btn2_key_on = 0,
+    .change_occur = 0,
+};
+
+void touch_info_init(void)
+{
+    touch_info.btn0_touch_on = 0;
+    touch_info.btn0_key_on = 0;
+    touch_info.btn1_touch_on = 0;
+    touch_info.btn1_key_on = 0;
+    touch_info.btn2_touch_on = 0;
+    touch_info.btn2_key_on = 0;
+    touch_info.change_occur = 0;
+
+}
+
+#define TOUCH_PRESS_DETECT      1
+#define TOUCH_RELEASE_DETECT    2
+
+#define TOUCH_DETECT   TOUCH_RELEASE_DETECT
+
+extern tElement BTN00_E00;
+extern tElement BTN00_E01;
+
+// make faster touch detection response
+void fasterButtonEventHandler(tSensor *pSensor)
+{
+    // bTouch is set to 1 when it pressed
+    // ==> bDetect is faster than bTouch when pressed, bTouch is faster than bDetect when released
+    // so we would like to make a flag(button_touch when it turned released
+    // check BTN00_E00 button
+    if (BTN00_E00.bDetect == 1)
+    {
+        if(touch_info.btn0_touch_on == 0)    // set bit one time
+        {
+            touch_info.btn0_touch_on = 1;
+
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn0_key_on = 1;     // user use this variable
+        }
+        else
+        {
+            __no_operation();
+        }
+
+        if(touch_info.change_occur == 0)    // if touch detection captured from main?
+        {
+            touch_info.btn0_key_on = 0;
+        }
+    }
+    else
+    {
+        if(touch_info.btn0_touch_on == 1)        // normal case of touch
+        {
+            touch_info.btn0_touch_on = 0;
+
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn0_key_on = 0;
+        }
+    }
+}
+
+void ButtonEventHandler(tSensor *pSensor)
+{
+    // bTouch is set to 1 when it pressed
+    // so we would like to make a flag(button_touch when it turned released
+    // check BTN00_E00 button
+    if (BTN00_E00.bTouch == 1)
+    {
+        if(touch_info.btn0_touch_on == 0)    // set bit one time
+        {
+            touch_info.btn0_touch_on = 1;
+        }
+#if (TOUCH_DETECT == TOUCH_PRESS_DETECT)
+            touch_info.change_occur = 1;        // update needed at main loop
+            if(touch_info.btn0_key_on == 1)      // (key_on == 1) : button touched and released
+                touch_info.btn0_key_on = 0;
+            else
+                touch_info.btn0_key_on = 1;
+        }
+#endif
+    }
+    else
+    {
+        if(touch_info.btn0_touch_on == 1)        // normal case of touch
+        {
+            touch_info.btn0_touch_on = 0;
+#if (TOUCH_DETECT == TOUCH_RELEASE_DETECT)
+            touch_info.change_occur = 1;        // update needed at main loop
+            if(touch_info.btn0_key_on == 1)      // (key_on == 1) : button touched and released
+                touch_info.btn0_key_on = 0;
+            else
+                touch_info.btn0_key_on = 1;
+        }
+#endif
+    }
+    // check BTN00_E01 button
+    if (BTN00_E01.bTouch == 1)
+    {
+        if(touch_info.btn1_touch_on == 0)    // set bit one time
+        {
+            touch_info.btn1_touch_on = 1;
+        }
+#if (TOUCH_DETECT == TOUCH_PRESS_DETECT)
+            touch_info.change_occur = 1;        // update needed at main loop
+            if(touch_info.btn1_key_on == 1)      // (key_on == 1) : button touched and released
+                touch_info.btn1_key_on = 0;
+            else
+                touch_info.btn1_key_on = 1;
+        }
+#endif
+    }
+    else
+    {
+        if(touch_info.btn1_touch_on == 1)        // normal case of touch
+        {
+            touch_info.btn1_touch_on = 0;
+#if (TOUCH_DETECT == TOUCH_RELEASE_DETECT)
+            touch_info.change_occur = 1;        // update needed at main loop
+            if(touch_info.btn1_key_on == 1)      // (key_on == 1) : button touched and released
+                touch_info.btn1_key_on = 0;
+            else
+                touch_info.btn1_key_on = 1;
+        }
+#endif
+
+    }
+}
+
+
+
 void main(void)
 {
 	//
@@ -64,6 +212,12 @@ void main(void)
 	WDTCTL = WDTPW | WDTHOLD;
 	BSP_configureMCU();
 	__bis_SR_register(GIE);
+
+    //
+    // Register button call back function
+    //
+//    MAP_CAPT_registerCallback(&BTN00, &ButtonEventHandler);
+    MAP_CAPT_registerCallback(&BTN00, &fasterButtonEventHandler);
 
 	//
 	// Start the CapTIvate application
@@ -85,6 +239,7 @@ void main(void)
 		// background application code.
 		//
 		__no_operation();
+        __no_operation();
 
 		//
 		// End of background loop iteration

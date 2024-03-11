@@ -59,6 +59,99 @@
 //#include "lp5012.h"
 #include "string.h"
 
+
+
+
+//
+// Timer related
+//
+#define LIMIT_MILI_SEC      1000
+#define LIMIT_SECOND        60
+#define LIMIT_MINUTE        60
+
+typedef struct tag_timer_type
+{
+    unsigned short msec;
+    unsigned char sec;
+    unsigned char min;
+    unsigned char hour;
+}_tag_timer_type;
+
+_tag_timer_type timer =
+{
+    .msec = 0,
+    .sec = 0,
+    .min = 0,
+    .hour = 0
+};
+long timer_comparison = 0;
+_tag_timer_type record_timer =
+{
+    .msec = 0,
+    .sec = 0,
+    .min = 0,
+    .hour = 0
+};
+long record_timer_comparison = 0;
+_tag_timer_type previous_timer =
+{
+    .msec = 0,
+    .sec = 0,
+    .min = 0,
+    .hour = 0
+};
+
+uint8_t new_record_flag = 0;
+
+//
+// Periodic timer (TA0 source = SMCLK/4 = 2M/4 = 500kHz)
+//
+#define TIMER0_SMCLK_1msec              500
+#define TIMER0_SMCLK_5msec              2500
+#define TIMER0_SMCLK_10msec             5000
+#define TIMER0_SMCLK_100msec            50000
+
+#define CONST_TIMER0_CCR0               TIMER0_SMCLK_1msec
+#define CONST_TIMER0_CCR1               TIMER0_SMCLK_5msec
+#define CONST_TIMER0_CCR2               TIMER0_SMCLK_10msec
+
+// 1msec,  5msec, 10msec continuous timer
+void timerA0_init(void)
+{
+    TA0CTL = TASSEL_2 + MC_2;                   // SMCLK, Cont. mode
+    // CCR0 interrupt enabled : 10msec
+    TA0CCTL0 = CCIE;
+    TA0CCR0 = CONST_TIMER0_CCR0;
+    // CCR1 interrupt enabled : 100msec
+//    TA0CCTL1 = CCIE;
+//    TA0CCR1 = CONST_TIMER0_CCR1;
+    // CCR2 interrupt enabled : 200msec
+//    TA0CCTL2 = CCIE;
+//    TA0CCR2 = CONST_TIMER0_CCR2;
+}
+
+void timerA0_start(void)
+{
+    timer.hour = timer.min = timer.sec = timer.msec = 0;
+
+    TA0CTL = TASSEL_2 + MC_2 + + ID_2 + TACLR;                   // SMCLK, DIV4, up mode
+    // CCR0 interrupt enabled
+    TA0CCTL0 = CCIE;
+    TA0CCR0 = CONST_TIMER0_CCR0;
+
+}
+
+void timerA0_stop(void)
+{
+    TA0CTL = TASSEL_2 + MC_0;
+    // CCR0 interrupt enabled
+    TA0CCTL0 = 0;
+    TA0CCR0 = 0;
+
+}
+
+
+
 //
 // switch related
 //
@@ -399,6 +492,61 @@ __interrupt void Port_2(void)
         SW2_PORT_IFG &= ~SW2_BIT;
     }
 
+}
+
+
+/******************************************************************************/
+// Timer0_A0 Interrupt Service Routine: Disables the timer and exists LPM3
+/******************************************************************************/
+
+
+// 1ms continuous mode timer
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void ISR_Timer0_A0(void)
+{
+    TA0CCR0 += CONST_TIMER0_CCR0;               // Add Offset to CCR1
+
+    timer.msec++;
+    if(timer.msec >= LIMIT_MILI_SEC)
+    {
+        timer.msec = 0;
+        timer.sec++;
+        if(timer.sec >= LIMIT_SECOND)
+        {
+            timer.sec = 0;
+            timer.min++;
+            if(timer.min >= LIMIT_MINUTE)
+            {
+                timer.min = 0;
+                timer.hour++;
+            }
+        }
+
+    }
+}
+
+
+#pragma vector=TIMER0_A1_VECTOR
+__interrupt void Timer0_A1A2(void)
+{
+    switch( TA0IV )
+    {
+        case  2:                                        // CCR1
+        {
+            TA0CCR1 += CONST_TIMER0_CCR1;               // Add Offset to CCR1
+
+        }
+        break;
+        case  4:                                        // CCR2
+        {
+            TA0CCR2 += CONST_TIMER0_CCR2;               // Add Offset to CCR2
+
+        } break;
+        case 10:                                        // TA0 Overflow
+        {
+            //P1OUT ^= LED_TA0_OVF;
+        } break;
+    }
 }
 
 

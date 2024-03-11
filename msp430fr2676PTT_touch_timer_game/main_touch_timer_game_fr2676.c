@@ -56,10 +56,47 @@
 #include "common.h"
 #include "stdint.h"
 #include "ssd1306.h"
-//#include "lp5012.h"
+#include "lp5012.h"
 #include "string.h"
 
 
+#define DISABLE     0
+#define ENABLE      1
+
+void GPIO_I2C_Init(void)
+{
+    // LP5012
+    SCL_1;
+    SDA_1;
+    SCL_OUT;
+    SDA_OUT;
+    SCL_PU;
+    SDA_PU;
+}
+
+#if 0       // EN pin is hard wired pulled up
+void GPIO_LP5012_IC_enable(unsigned char en)
+{
+    LP5012_EN_DIR_OUTPUT;
+
+    if(en == 1)
+        LP5012_EN_PIN_HIGH;
+    else
+        LP5012_EN_PIN_LOW;
+    delay_ms(10);
+}
+#endif
+
+void FR2676_LP5012_board_init()
+{
+    LP5012_I2C_chip_reset_1(1);
+    delay_ms(100);
+
+    LP5012_I2C_chip_enable_1(ENABLE);
+
+    delay_ms(100);
+
+}
 
 
 //
@@ -346,6 +383,19 @@ void ButtonEventHandler(tSensor *pSensor)
 }
 
 
+#define NUM_OF_LP5012_DEV   1
+#define MAX_LED     12
+#define LED_OUT_X_MID_LEVEL         0x20
+#define LED_OUT_X_HIGH_LEVEL        0x60
+
+uint8_t toggle = 0;
+uint8_t brightness_level = 128;       // level : 0~255
+uint8_t brightness = 2, led_ch = 0;
+uint8_t data_buf[0x16];
+uint8_t i, data;
+
+
+
 //#define CONST   //const
 
 CONST char str_mode[] = "game";               //5 : including null
@@ -413,6 +463,36 @@ void main(void)
 	// Start the CapTIvate application
 	//
 	CAPT_appStart();
+
+
+    //GPIO_LP5012_IC_enable(1);             // EN pin is hard wired pulled up at this solution
+    GPIO_I2C_Init();
+    FR2676_LP5012_board_init();
+
+    //i2c_write_byte(LP5012_DEV0_ADDR, LP5012_DEVICE_CONFIG1, BIT5);       // set config1 register
+    //[to save mem]i2c_write_byte(LP5012_DEV0_ADDR, LP5012_DEVICE_CONFIG1, 0x00);       // set config1 register
+    i2c_write_byte_1(LP5012_DEVICE_CONFIG1, 0x00);
+    //LP5012_I2C_chip_enable(LP5012_DEV0_ADDR, 1);
+
+    //
+    // LED animation of shifting LED
+    //
+    //brightness_level = 128;         // brightness :
+    //LP5012_I2C_LEDx_ch_brightness(LP5012_DEV0_ADDR, brightness_level, brightness_level, brightness_level, brightness_level);
+    LP5012_I2C_LEDx_single_brightness_1(brightness_level);
+
+    // seperate color control
+    for(led_ch=0; led_ch<MAX_LED; led_ch++)
+    {
+        LP5012_I2C_OUTx_color_1(led_ch, LED_OUT_X_MID_LEVEL);      // color level set from 0x80 to 0xc0
+        delay_ms(25);
+    }
+    for(led_ch=0; led_ch<MAX_LED; led_ch++)
+    {
+        LP5012_I2C_OUTx_color_1(led_ch, 0x00);      // color level set from 0x80 to 0xc0
+        delay_ms(25);
+    }
+
 
     MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
     ssd1306_clearDisplay();

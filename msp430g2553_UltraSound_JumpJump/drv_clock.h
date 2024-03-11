@@ -8,7 +8,7 @@
 #ifndef DRV_CLOCK_H_
 #define DRV_CLOCK_H_
 
-#include <type_define.h>
+#include <main_definition.h>
 // main clock(MCLK) setting
 #define MCLK_1MHZ       1
 #define MCLK_8MHZ       2

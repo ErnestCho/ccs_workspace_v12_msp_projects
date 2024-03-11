@@ -42,7 +42,6 @@
 
 
 #include <msp430.h> 
-#include <type_define.h>
 #include <drv_clock.h>
 #include <drv_gpio.h>
 #include <drv_gpio_interrupt.h>
@@ -53,6 +52,7 @@
 
 #include <ssd1306.h>
 #include <i2c.h>
+#include <main_definition.h>
 
 #define CPU_F ((double)16000000)
 #define delay_us(x) __delay_cycles((long)(CPU_F*(double)x/1000000.0))

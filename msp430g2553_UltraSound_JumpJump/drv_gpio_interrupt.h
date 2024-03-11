@@ -8,8 +8,8 @@
 #ifndef DRV_GPIO_INTERRUPT_H_
 #define DRV_GPIO_INTERRUPT_H_
 
+#include <main_definition.h>
 #include <msp430.h>
-#include <type_define.h>
 
 // SW1 = P1.3
 #define SW1_PORT_DIR            P1DIR

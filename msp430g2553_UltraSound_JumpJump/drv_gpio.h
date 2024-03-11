@@ -8,8 +8,8 @@
 #ifndef DRV_GPIO_H_
 #define DRV_GPIO_H_
 
+#include <main_definition.h>
 #include <msp430.h>
-#include <type_define.h>
 
 //////////////////////////////////////////////////////////
 // port setting for UltraSound JumpJump HW rev.01

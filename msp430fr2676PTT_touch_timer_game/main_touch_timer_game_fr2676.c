@@ -394,7 +394,33 @@ uint8_t brightness = 2, led_ch = 0;
 uint8_t data_buf[0x16];
 uint8_t i, data;
 
+char disp_buf[24];
+char tmp_buf[6];
 
+// TOUCH_TOUCH_RUN :
+// - Right btn :
+
+typedef enum
+{
+     //GAME_MODE_NONE = 0,
+     GAME_MODE_TOUCH_TOUCH_RUN = 0,
+     GAME_MODE_STOP_WATCH,
+     GAME_MODE_MAX
+}enum_game_mode;
+enum_game_mode game_mode = GAME_MODE_TOUCH_TOUCH_RUN;
+
+#define GAME_DEFAULT_REPEAT     4
+uint8_t game_repeat_cnt = GAME_DEFAULT_REPEAT;
+uint8_t game_repeat_cnt_backup = GAME_DEFAULT_REPEAT;
+
+typedef enum
+{
+    GAME_SETTING = 0,
+    GAME_EXECUTING = 1,
+    GAME_DISP_RESULT = 2,
+    GAME_WAIT_NEXT_STEP = 3,
+}enum_game_status;
+enum_game_status game_status = GAME_SETTING;
 
 //#define CONST   //const
 
@@ -508,25 +534,428 @@ void main(void)
 	//
 	while(1)
 	{
-		//
-		// Run the captivate application handler.
-		//
-		CAPT_appHandler();
+        if(game_status == GAME_SETTING)
+        {
+            // Run the captivate application handler.
+            CAPT_appHandler();
 
-		//
-		// This is a great place to add in any 
-		// background application code.
-		//
-		__no_operation();
-        __no_operation();
+            ///////////////////////////////////////////////////
+            // check switch buttons are pressed : SW1
+            ///////////////////////////////////////////////////
+            if(switch_status & BIT0) // switch1 function : Mode change
+            {
+                switch_status &= ~BIT0;
 
-		//
-		// End of background loop iteration
-		// Go to sleep if there is nothing left to do
-		//
-		CAPT_appSleep();
-		
-	} // End background loop
+                game_mode++;
+                if(game_mode >= GAME_MODE_MAX)
+                {
+                    game_mode = GAME_MODE_TOUCH_TOUCH_RUN;
+                }
+
+                MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                ssd1306_clearDisplay();
+                ssd1306_printString(0, 1, str_game_mode, FONT_MS_GOTHIC8x16);
+
+                switch(game_mode)
+                {
+                    case GAME_MODE_TOUCH_TOUCH_RUN :
+                    {
+                        ssd1306_printString(0, 0, str_switch_info1, FONT_6x8);
+                        ssd1306_printString(0, 3, str_game_mode0, FONT_MS_GOTHIC8x16);
+                        ssd1306_printString(0, 7, str_touch_to_start, FONT_6x8);
+                    }break;
+                    case GAME_MODE_STOP_WATCH :
+                    {
+                        ssd1306_printString(0, 0, str_mode, FONT_6x8);
+                        ssd1306_printString(0, 3, str_game_mode1, FONT_MS_GOTHIC8x16);
+                        ssd1306_printString(0, 7, str_touch_to_start, FONT_6x8);
+                    }break;
+                }
+                MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+            }
+
+            /////////////////////////////////////////////////
+            // check switch buttons are pressed : SW2
+            /////////////////////////////////////////////////
+            if(switch_status & BIT1)    // switch2 function : Mode parameter setting
+            {
+                switch_status &= ~BIT1;
+
+                if(game_mode == GAME_MODE_TOUCH_TOUCH_RUN)
+                {
+                    game_repeat_cnt++;              // increase game repeat counts(touch counts).
+                    if(game_repeat_cnt > 12)
+                    {
+                        game_repeat_cnt = 0;
+                    }
+                    game_repeat_cnt_backup = game_repeat_cnt;
+
+                    MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                    ssd1306_clearDisplay();
+                    ssd1306_printString(0, 0, str_switch_info1, FONT_6x8);
+                    ssd1306_printString(0, 1, str_game, FONT_MS_GOTHIC8x16);
+                    ssd1306_printString(0, 3, str_game_mode0, FONT_MS_GOTHIC8x16);
+
+                    memset(disp_buf, 0, 24);
+                    strcpy(disp_buf, str_game_cnt);
+#ifdef CCS_VER9
+                    ltoa(game_repeat_cnt, tmp_buf);
+#else
+                    ltoa(game_repeat_cnt, tmp_buf, 10);
+#endif
+                    strcat(disp_buf, tmp_buf);
+                    strcat(disp_buf, " ");
+
+                    ssd1306_printString(0, 5, disp_buf, FONT_MS_GOTHIC8x16);
+                    MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+
+                }
+                else if(game_mode == GAME_MODE_STOP_WATCH)
+                {
+                    MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                    ssd1306_clearDisplay();
+                    ssd1306_printString(0, 0, str_mode, FONT_6x8);
+                    ssd1306_printString(0, 1, str_game, FONT_MS_GOTHIC8x16);
+                    ssd1306_printString(0, 3, str_game_mode1, FONT_MS_GOTHIC8x16);
+
+                    ssd1306_printString(0, 5, str_push_execute, FONT_MS_GOTHIC8x16);
+                    MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                }
+            }
+
+            /////////////////////////////////////////////////
+            // LED indication
+            /////////////////////////////////////////////////
+            if(game_mode == GAME_MODE_TOUCH_TOUCH_RUN)
+            {
+                if(game_repeat_cnt == 0)
+                {
+                    // clear all leds
+                    for(led_ch=0; led_ch<MAX_LED; led_ch++)
+                    {
+                        LP5012_I2C_OUTx_color_1(led_ch, 0x00);      // color level set from 0x80 to 0xc0
+                    }
+                }
+                else
+                {
+                    // separate color control
+                    for(led_ch=0; led_ch<game_repeat_cnt; led_ch++)
+                    {
+                        LP5012_I2C_OUTx_color_1(led_ch, LED_OUT_X_MID_LEVEL);      // color level set from 0x80 to 0xc0
+                    }
+                }
+            }
+            else
+            {
+                // clear all leds
+                for(led_ch=0; led_ch<MAX_LED; led_ch++)
+                {
+                    LP5012_I2C_OUTx_color_1(led_ch, 0x00);      // color level set from 0x80 to 0xc0
+                }
+                game_repeat_cnt = 1;
+            }
+
+            // start the game
+            if(touch_info.change_occur == 1)
+            {
+                touch_info.change_occur = 0;
+                if(touch_info.btn0_key_on == 1)   // touch pressed
+                {
+                    // start game running
+                    game_status = GAME_EXECUTING;
+                    timerA0_start();
+
+#ifdef CCS_VER9
+                    ltoa(game_repeat_cnt, tmp_buf);
+#else
+                    ltoa(game_repeat_cnt, tmp_buf, 10);
+#endif
+                    strcpy(disp_buf, tmp_buf);
+                    strcat(disp_buf, str_more);
+
+                    MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                    ssd1306_clearDisplay();
+                    ssd1306_printString(0, 0, str_stop_stop, FONT_6x8);
+                    ssd1306_printString(0, 1, str_executing, FONT_MS_GOTHIC8x16);
+                    //ssd1306_printString(0, 3, str_game_mode0, FONT_MS_GOTHIC8x16);
+                    if(game_mode == GAME_MODE_TOUCH_TOUCH_RUN)
+                    {
+                        ssd1306_printString(0, 3, disp_buf, FONT_MS_GOTHIC8x16);
+                    }
+                    else
+                    {
+                        ssd1306_printString(0, 3, str_touch_to_stop, FONT_MS_GOTHIC8x16);
+                    }
+
+                    ssd1306_clear_one_line(5);
+                    ssd1306_clear_one_line(6);
+                    MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+
+                }
+            }
+            //
+            // End of background loop iteration
+            // Go to sleep if there is nothing left to do
+            //
+            CAPT_appSleep();
+
+        }   // end of if(game_status == GAME_SETTING)
+
+        else if(game_status == GAME_EXECUTING)
+        {
+            //
+            // Run the captivate application handler.
+            //
+            CAPT_appHandler();
+#if 1   // runtime display of the time
+#ifdef CCS_VER9
+            ltoa(timer.min, tmp_buf);
+#else
+            ltoa(timer.min, tmp_buf, 10);
+#endif
+            strcpy(disp_buf, tmp_buf);
+            strcat(disp_buf, ":");
+#ifdef CCS_VER9
+            ltoa(timer.sec, tmp_buf);
+#else
+            ltoa(timer.sec, tmp_buf, 10);
+#endif
+            strcat(disp_buf, tmp_buf);
+            strcat(disp_buf, ":");
+#ifdef CCS_VER9
+            ltoa(timer.msec, tmp_buf);
+#else
+            ltoa(timer.msec, tmp_buf, 10);
+#endif
+            strcat(disp_buf, tmp_buf);
+            strcat(disp_buf, "   ");
+            MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+            ssd1306_printString(0, 5, disp_buf, FONT_MS_GOTHIC8x16);
+            MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+
+
+            if(game_mode == GAME_MODE_TOUCH_TOUCH_RUN)
+            {
+#ifdef CCS_VER9
+                ltoa(game_repeat_cnt, tmp_buf);
+#else
+                ltoa(game_repeat_cnt, tmp_buf, 10);
+#endif
+                strcpy(disp_buf, tmp_buf);
+                strcat(disp_buf, str_more);
+
+                MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                ssd1306_printString(0, 3, disp_buf, FONT_MS_GOTHIC8x16);
+                MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+            }
+#endif
+            if(touch_info.change_occur == 1)
+            {
+                touch_info.change_occur = 0;
+
+                if(touch_info.btn0_touch_on == 1)
+                {
+                    if(game_repeat_cnt == 1)    // check end of the game?
+                    {
+                        timerA0_stop();
+                        game_repeat_cnt = 0;
+
+                        // save results
+                        game_status = GAME_DISP_RESULT;
+                    }
+                    else
+                    {
+                        game_repeat_cnt--;
+                    }
+
+                    //
+                    LP5012_I2C_OUTx_color_1(game_repeat_cnt, 0);
+                }
+            }
+
+            if(switch_status & BIT0 || switch_status & BIT1) // switch1 function : Mode change
+            {
+                game_status = GAME_WAIT_NEXT_STEP;
+            }
+
+
+            //
+            // End of background loop iteration
+            // Go to sleep if there is nothing left to do
+            //
+            CAPT_appSleep();
+        } // end of else if(game_status == GAME_EXECUTING)
+        else if(game_status == GAME_DISP_RESULT)
+        {
+#if 1
+            strcpy(disp_buf, str_now);
+#ifdef CCS_VER9
+            ltoa(timer.min, tmp_buf);
+#else
+            ltoa(timer.min, tmp_buf, 10);
+#endif
+            strcat(disp_buf, tmp_buf);
+            strcat(disp_buf, ":");
+#ifdef CCS_VER9
+            ltoa(timer.sec, tmp_buf);
+#else
+            ltoa(timer.sec, tmp_buf, 10);
+#endif
+            strcat(disp_buf, tmp_buf);
+            strcat(disp_buf, ":");
+#ifdef CCS_VER9
+            ltoa(timer.msec, tmp_buf);
+#else
+            ltoa(timer.msec, tmp_buf, 10);
+#endif
+            strcat(disp_buf, tmp_buf);
+            strcat(disp_buf, " ");
+
+            if(game_mode == GAME_MODE_TOUCH_TOUCH_RUN)
+            {
+                timer_comparison = timer.min*60*1000 + timer.sec*1000 + timer.msec;
+                if((record_timer_comparison == 0) || (timer_comparison < record_timer_comparison) )  // new record condition
+                {
+                    record_timer.msec = timer.msec;
+                    record_timer.sec = timer.sec;
+                    record_timer.min = timer.min;
+                    record_timer.hour = timer.hour;
+                    record_timer_comparison = timer_comparison;
+
+                    new_record_flag = 1;
+                }
+            }
+
+            MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+            ssd1306_clearDisplay();
+            if(game_mode == GAME_MODE_TOUCH_TOUCH_RUN)
+            {
+                if(new_record_flag == 1)
+                {
+                    ssd1306_printString(0, 0, str_new_record, FONT_MS_GOTHIC8x16);
+                    new_record_flag = 0;
+                }
+                else
+                {
+                    ssd1306_printString(0, 0, str_result, FONT_MS_GOTHIC8x16);
+                }
+                ssd1306_printString(0, 3, disp_buf, FONT_MS_GOTHIC8x16);
+            }
+            else
+            {
+                ssd1306_printString(0, 0, str_result, FONT_MS_GOTHIC8x16);
+                ssd1306_printString(0, 3, disp_buf, FONT_MS_GOTHIC8x16);
+            }
+            MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+
+            if(game_mode == GAME_MODE_TOUCH_TOUCH_RUN)
+            {
+                strcpy(disp_buf, str_top);
+#ifdef CCS_VER9
+                ltoa(record_timer.min, tmp_buf);
+#else
+                ltoa(record_timer.min, tmp_buf, 10);
+#endif
+                strcat(disp_buf, tmp_buf);
+                strcat(disp_buf, ":");
+#ifdef CCS_VER9
+                ltoa(record_timer.sec, tmp_buf);
+#else
+                ltoa(record_timer.sec, tmp_buf, 10);
+#endif
+                strcat(disp_buf, tmp_buf);
+                strcat(disp_buf, ":");
+#ifdef CCS_VER9
+                ltoa(record_timer.msec, tmp_buf);
+#else
+                ltoa(record_timer.msec, tmp_buf, 10);
+#endif
+                strcat(disp_buf, tmp_buf);
+                strcat(disp_buf, " ");
+
+                MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                ssd1306_printString(0, 5, disp_buf, FONT_MS_GOTHIC8x16);
+                MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+            }
+            else
+            {
+                strcpy(disp_buf, str_previous);
+#ifdef CCS_VER9
+                ltoa(previous_timer.min, tmp_buf);
+#else
+                ltoa(previous_timer.min, tmp_buf, 10);
+#endif
+                strcat(disp_buf, tmp_buf);
+                strcat(disp_buf, ":");
+#ifdef CCS_VER9
+                ltoa(previous_timer.sec, tmp_buf);
+#else
+                ltoa(previous_timer.sec, tmp_buf, 10);
+#endif
+                strcat(disp_buf, tmp_buf);
+                strcat(disp_buf, ":");
+#ifdef CCS_VER9
+                ltoa(previous_timer.msec, tmp_buf);
+#else
+                ltoa(previous_timer.msec, tmp_buf, 10);
+#endif
+                strcat(disp_buf, tmp_buf);
+                strcat(disp_buf, " ");
+
+                MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                ssd1306_printString(0, 5, disp_buf, FONT_MS_GOTHIC8x16);
+                MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+
+                previous_timer.msec = timer.msec;
+                previous_timer.sec = timer.sec;
+                previous_timer.min = timer.min;
+                previous_timer.hour = timer.hour;
+            }
+
+#endif
+
+            game_status = GAME_WAIT_NEXT_STEP;
+        }
+        else if(game_status == GAME_WAIT_NEXT_STEP)
+        {
+            CAPT_appHandler();
+
+            if( (touch_info.change_occur == 1) || (switch_status & BIT0) || (switch_status & BIT1) )
+            {
+                switch_status &= ~(BIT0 + BIT1);
+                touch_info.change_occur = 0;
+
+                if(touch_info.btn0_key_on == 1)
+                {
+                    game_status = GAME_SETTING;
+                    game_repeat_cnt = game_repeat_cnt_backup;
+
+                    if(game_mode == GAME_MODE_TOUCH_TOUCH_RUN)
+                    {
+                        game_mode = GAME_MODE_STOP_WATCH;
+                    }
+                    else
+                    {
+                        game_mode = GAME_MODE_TOUCH_TOUCH_RUN;
+                    }
+
+                    MAP_CAPT_disableISR(CAPT_TIMER_INTERRUPT);      // disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+                    ssd1306_clearDisplay();
+                    MAP_CAPT_enableISR(CAPT_TIMER_INTERRUPT);       // release disable Captivate ISR during I2C OLED display writing. (to prevent text crack)
+
+                    switch_status = BIT0;
+                }
+            }
+
+            //
+            // End of background loop iteration
+            // Go to sleep if there is nothing left to do
+            //
+            CAPT_appSleep();
+        } // end of else if(game_status == GAME_DISP_RESULT)
+
+
+    } // End of while
 } // End main()
 
 

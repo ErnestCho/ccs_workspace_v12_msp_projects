@@ -94,9 +94,9 @@
 #define SDA_PU      P1REN |= BIT3;
 
 // LP5012 - EN --> Hard wired pull up
-//#define LP5012_EN_DIR_OUTPUT        P1DIR |= BIT7
-//#define LP5012_EN_PIN_HIGH          P1OUT |= BIT7
-//#define LP5012_EN_PIN_LOW           P1OUT &= ~BIT7
+#define LP5012_EN_DIR_OUTPUT        P5DIR |= BIT3
+#define LP5012_EN_PIN_HIGH          P5OUT |= BIT3
+#define LP5012_EN_PIN_LOW           P5OUT &= ~BIT3
 
 
 void Stop(void);

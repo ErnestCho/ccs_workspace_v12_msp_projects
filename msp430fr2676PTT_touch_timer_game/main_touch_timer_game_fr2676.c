@@ -74,7 +74,7 @@ void GPIO_I2C_Init(void)
     SDA_PU;
 }
 
-#if 0       // EN pin is hard wired pulled up
+#if 1       // EN pin is hard wired pulled up
 void GPIO_LP5012_IC_enable(unsigned char en)
 {
     LP5012_EN_DIR_OUTPUT;

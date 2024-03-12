@@ -194,23 +194,23 @@ void timerA0_stop(void)
 //
 uint8_t switch_status = 0;
 
-// SW1 = P2.0
-#define SW1_PORT_DIR            P2DIR
-#define SW1_PORT_OUT            P2OUT
-#define SW1_PORT_REN            P2REN
-#define SW1_PORT_IES            P2IES
-#define SW1_PORT_IE             P2IE
-#define SW1_PORT_IFG            P2IFG
-#define SW1_BIT                 BIT0
+// SW1 = P1.6
+#define SW1_PORT_DIR            P1DIR
+#define SW1_PORT_OUT            P1OUT
+#define SW1_PORT_REN            P1REN
+#define SW1_PORT_IES            P1IES
+#define SW1_PORT_IE             P1IE
+#define SW1_PORT_IFG            P1IFG
+#define SW1_BIT                 BIT6
 
-// SW2 = P2.1
+// SW2 = P2.7
 #define SW2_PORT_DIR            P2DIR
 #define SW2_PORT_OUT            P2OUT
 #define SW2_PORT_REN            P2REN
 #define SW2_PORT_IES            P2IES
 #define SW2_PORT_IE             P2IE
 #define SW2_PORT_IFG            P2IFG
-#define SW2_BIT                 BIT1
+#define SW2_BIT                 BIT7
 
 ///////////////////////////////////////////////////////////////////////
 // GPIO Switch interrupt part
@@ -958,10 +958,9 @@ void main(void)
     } // End of while
 } // End main()
 
-
-// Port 2 interrupt service routine
-#pragma vector=PORT2_VECTOR
-__interrupt void Port_2(void)
+// Port 1 interrupt service routine
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1(void)
 {
     // switch 1 detection ==> sw1 function : mode change
     if(SW1_PORT_IFG & SW1_BIT)
@@ -981,6 +980,12 @@ __interrupt void Port_2(void)
     {
         SW1_PORT_IFG &= ~SW1_BIT;
     }
+
+}
+// Port 2 interrupt service routine
+#pragma vector=PORT2_VECTOR
+__interrupt void Port_2(void)
+{
 
     // switch 2 detection ==> sw2 function : brightness control
     if(SW2_PORT_IFG & SW2_BIT)

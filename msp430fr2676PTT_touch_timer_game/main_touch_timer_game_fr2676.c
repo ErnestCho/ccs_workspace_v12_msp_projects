@@ -276,6 +276,7 @@ void touch_info_init(void)
 
 extern tElement BTN00_E00;
 extern tElement BTN00_E01;
+extern tElement BTN00_E02;
 
 // make faster touch detection response
 void fasterButtonEventHandler(tSensor *pSensor)
@@ -313,6 +314,67 @@ void fasterButtonEventHandler(tSensor *pSensor)
             touch_info.btn0_key_on = 0;
         }
     }
+
+    if (BTN00_E01.bDetect == 1)
+    {
+        if(touch_info.btn1_touch_on == 0)    // set bit one time
+        {
+            touch_info.btn1_touch_on = 1;
+
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn1_key_on = 1;     // user use this variable
+        }
+        else
+        {
+            __no_operation();
+        }
+
+        if(touch_info.change_occur == 0)    // if touch detection captured from main?
+        {
+            touch_info.btn1_key_on = 0;
+        }
+    }
+    else
+    {
+        if(touch_info.btn1_touch_on == 1)        // normal case of touch
+        {
+            touch_info.btn1_touch_on = 0;
+
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn1_key_on = 0;
+        }
+    }
+
+    if (BTN00_E02.bDetect == 1)
+    {
+        if(touch_info.btn2_touch_on == 0)    // set bit one time
+        {
+            touch_info.btn2_touch_on = 1;
+
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn2_key_on = 1;     // user use this variable
+        }
+        else
+        {
+            __no_operation();
+        }
+
+        if(touch_info.change_occur == 0)    // if touch detection captured from main?
+        {
+            touch_info.btn2_key_on = 0;
+        }
+    }
+    else
+    {
+        if(touch_info.btn2_touch_on == 1)        // normal case of touch
+        {
+            touch_info.btn2_touch_on = 0;
+
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn2_key_on = 0;
+        }
+    }
+
 }
 
 void ButtonEventHandler(tSensor *pSensor)
@@ -441,7 +503,7 @@ CONST char str_push_execute[] = "Push Execute";           // 13 : including null
 CONST char str_stop_stop[] = "stop        stop";        // 17
 CONST char str_executing[] = "Executing";                  // 10
 CONST char str_more[] = " more..";
-CONST char str_result[] =     "::Results::";                  // 10
+CONST char str_result[] = "::Results::";                  // 10
 CONST char str_new_record[] = "New Record!";                  // 10
 CONST char str_top[] = "Top:";                  // 10
 CONST char str_now[] = "Now:";                  // 10

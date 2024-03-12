@@ -446,7 +446,7 @@ void ButtonEventHandler(tSensor *pSensor)
 
 
 #define NUM_OF_LP5012_DEV   1
-#define MAX_LED     12
+#define MAX_LED             12
 #define LED_OUT_X_MID_LEVEL         0x20
 #define LED_OUT_X_HIGH_LEVEL        0x60
 

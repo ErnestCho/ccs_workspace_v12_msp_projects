@@ -81,17 +81,17 @@
 #define LP5012_BROAD_RD_ADDR    0x19        // pin [ADDR1,ADDR0] = [x,x]    // 0x0C<<1 + 1(RD)
 */
 
-// LP5012 - SCL : P1.7, SDA : P1.6
-#define SCL_OUT     P1DIR |=  BIT7              //SCL Output
-#define SCL_1       P1OUT |=  BIT7              //SCL = 1
-#define SCL_0       P1OUT &=~ BIT7              //SCL = 0
-#define SCL_PU      P1REN |= BIT7;
-#define SDA_1       P1OUT |=  BIT6              //SDA = 1
-#define SDA_0       P1OUT &=~ BIT6              //SDA = 0
-#define SDA_IN      P1DIR &=~ BIT6;             //SDA Input
-#define SDA_OUT     P1DIR |=  BIT6              //SDA Output
-#define SDA_READ    ((P1IN >> 6) & 0x01)        //Read SDA
-#define SDA_PU      P1REN |= BIT6;
+// LP5012 - SCL : P4.4, SDA : P4.3
+#define SCL_OUT     P4DIR |=  BIT4              //SCL Output
+#define SCL_1       P4OUT |=  BIT4              //SCL = 1
+#define SCL_0       P4OUT &=~ BIT4              //SCL = 0
+#define SCL_PU      P4REN |= BIT4;
+#define SDA_1       P4OUT |=  BIT3              //SDA = 1
+#define SDA_0       P4OUT &=~ BIT3              //SDA = 0
+#define SDA_IN      P4DIR &=~ BIT3;             //SDA Input
+#define SDA_OUT     P4DIR |=  BIT3              //SDA Output
+#define SDA_READ    ((P4IN >> 3) & 0x01)        //Read SDA
+#define SDA_PU      P1REN |= BIT3;
 
 // LP5012 - EN --> Hard wired pull up
 //#define LP5012_EN_DIR_OUTPUT        P1DIR |= BIT7

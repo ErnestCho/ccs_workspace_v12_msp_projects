@@ -130,10 +130,10 @@ unsigned char buffer[LINE_BUF_SIZ];                                             
 #define DATA_TYPE_ZERO_ENC      2
 
 typedef enum {
-    //FONT_5x7 = 0,
-    FONT_6x8 = 0,
-    //FONT_14x16,
-    //FONT_FRANKLIN_GOTHIC_MEDIUM_COND10x15,
+    FONT_5x7 = 0,
+    FONT_6x8,
+    FONT_14x16,
+    FONT_FRANKLIN_GOTHIC_MEDIUM_COND10x15,
     FONT_MS_GOTHIC8x16,
     FONT_MAX
 }font_idx;

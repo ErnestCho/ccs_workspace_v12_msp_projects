@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 #include "ssd1306.h"
-#if 0
+#if 1
 #include "font_5x7.h"
 #include "font_6x8.h"
 #include "font_14x16.h"
@@ -27,11 +27,12 @@
 
 CONST font fonts[FONT_MAX] =
 {
-#if 0   // memory size limit
+#if 1   // memory size limit
     //FONT_5x7
     {
         .width = 5,
         .height = 7,
+        .data_type = DATA_TYPE_RAW,
         .data = &font_5x7_raw[0],
     },
 #endif
@@ -43,20 +44,32 @@ CONST font fonts[FONT_MAX] =
         .data = &font_6x8_raw[0][0], //&font_6x8__zero_enc_raw[0],
         .offset = NULL, //&font_6x8_raw_offset[0],
     },
-#if 0   // memory size limit
+#if 1   // memory size limit
     //FONT_14x16
     {
         .width = 14,
         .height = 16,
+        .data_type = DATA_TYPE_RAW,
         .data = &font_14x16_raw[0],
     },
     //FONT_FRANKLIN_GOTHIC_MEDIUM_COND10x15
     {
         .width = 10,
         .height = 15,
+        .data_type = DATA_TYPE_RAW,
         .data = &Franklin_Gothic_Medium_Cond10x15[0],
     },
 #endif
+#if 1   // memory size limit
+    //FONT_MS_GOTHIC8x16
+    {
+        .width = 8,
+        .height = 16,
+        .data_type = DATA_TYPE_RAW,
+        //.data_type = DATA_TYPE_ZERO_ENC, //DATA_TYPE_RAW
+        .data = &MS_Gothic8x16[0],
+    },
+#else
     //FONT_MS_GOTHIC8x16
     {
         .width = 8,
@@ -69,6 +82,7 @@ CONST font fonts[FONT_MAX] =
         .offset = &MS_Gothic8x16_offset[0],
 #endif
     },
+#endif
 };
 
 #if 0

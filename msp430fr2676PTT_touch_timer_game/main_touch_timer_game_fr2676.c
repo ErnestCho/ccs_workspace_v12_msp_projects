@@ -238,13 +238,13 @@ void GPIO_SW1_SW2_Interrupt_Set(void)
 
 
 typedef struct touch_bit_type {
-    unsigned btn0_touch_on : 1;
-    unsigned btn0_key_on : 1;
+    unsigned btn0_touch_on : 1;         // identify touch on/off
+    unsigned btn0_key_on : 1;           // depends on key type : toggle key on/off happened at main loop, button key on/off happened at touch callback function
     unsigned btn1_touch_on : 1;
     unsigned btn1_key_on : 1;
     unsigned btn2_touch_on : 1;
     unsigned btn2_key_on : 1;
-    unsigned change_occur : 1;
+    unsigned change_occur : 1;          // identify touch event happened
 }_tag_touch_bit_type;
 
 _tag_touch_bit_type touch_info = {
@@ -315,6 +315,7 @@ void fasterButtonEventHandler(tSensor *pSensor)
         }
     }
 
+    // check BTN00_E01 button
     if (BTN00_E01.bDetect == 1)
     {
         if(touch_info.btn1_touch_on == 0)    // set bit one time
@@ -345,6 +346,7 @@ void fasterButtonEventHandler(tSensor *pSensor)
         }
     }
 
+    // check BTN00_E02 button
     if (BTN00_E02.bDetect == 1)
     {
         if(touch_info.btn2_touch_on == 0)    // set bit one time
@@ -387,61 +389,93 @@ void ButtonEventHandler(tSensor *pSensor)
         if(touch_info.btn0_touch_on == 0)    // set bit one time
         {
             touch_info.btn0_touch_on = 1;
-        }
-#if (TOUCH_DETECT == TOUCH_PRESS_DETECT)
+
             touch_info.change_occur = 1;        // update needed at main loop
-            if(touch_info.btn0_key_on == 1)      // (key_on == 1) : button touched and released
-                touch_info.btn0_key_on = 0;
-            else
-                touch_info.btn0_key_on = 1;
+            touch_info.btn0_key_on = 1;     // user use this variable
         }
-#endif
+        else
+        {
+            __no_operation();
+        }
+
+        if(touch_info.change_occur == 0)    // if touch detection captured from main?
+        {
+            touch_info.btn0_key_on = 0;
+        }
     }
     else
     {
         if(touch_info.btn0_touch_on == 1)        // normal case of touch
         {
             touch_info.btn0_touch_on = 0;
-#if (TOUCH_DETECT == TOUCH_RELEASE_DETECT)
+
             touch_info.change_occur = 1;        // update needed at main loop
-            if(touch_info.btn0_key_on == 1)      // (key_on == 1) : button touched and released
-                touch_info.btn0_key_on = 0;
-            else
-                touch_info.btn0_key_on = 1;
+            touch_info.btn0_key_on = 0;
         }
-#endif
     }
+
     // check BTN00_E01 button
     if (BTN00_E01.bTouch == 1)
     {
         if(touch_info.btn1_touch_on == 0)    // set bit one time
         {
             touch_info.btn1_touch_on = 1;
-        }
-#if (TOUCH_DETECT == TOUCH_PRESS_DETECT)
+
             touch_info.change_occur = 1;        // update needed at main loop
-            if(touch_info.btn1_key_on == 1)      // (key_on == 1) : button touched and released
-                touch_info.btn1_key_on = 0;
-            else
-                touch_info.btn1_key_on = 1;
+            touch_info.btn1_key_on = 1;     // user use this variable
         }
-#endif
+        else
+        {
+            __no_operation();
+        }
+
+        if(touch_info.change_occur == 0)    // if touch detection captured from main?
+        {
+            touch_info.btn1_key_on = 0;
+        }
     }
     else
     {
         if(touch_info.btn1_touch_on == 1)        // normal case of touch
         {
             touch_info.btn1_touch_on = 0;
-#if (TOUCH_DETECT == TOUCH_RELEASE_DETECT)
-            touch_info.change_occur = 1;        // update needed at main loop
-            if(touch_info.btn1_key_on == 1)      // (key_on == 1) : button touched and released
-                touch_info.btn1_key_on = 0;
-            else
-                touch_info.btn1_key_on = 1;
-        }
-#endif
 
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn1_key_on = 0;
+        }
     }
+
+    // check BTN00_E02 button
+    if (BTN00_E02.bTouch == 1)
+    {
+        if(touch_info.btn2_touch_on == 0)    // set bit one time
+        {
+            touch_info.btn2_touch_on = 1;
+
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn2_key_on = 1;     // user use this variable
+        }
+        else
+        {
+            __no_operation();
+        }
+
+        if(touch_info.change_occur == 0)    // if touch detection captured from main?
+        {
+            touch_info.btn2_key_on = 0;
+        }
+    }
+    else
+    {
+        if(touch_info.btn2_touch_on == 1)        // normal case of touch
+        {
+            touch_info.btn2_touch_on = 0;
+
+            touch_info.change_occur = 1;        // update needed at main loop
+            touch_info.btn2_key_on = 0;
+        }
+    }
+
 }
 
 
@@ -513,6 +547,7 @@ CONST char str_touch_to_start[] = "touch to start";          // 14 : including n
 CONST char str_touch_to_stop[] = "touch & stop";          // 14 : including null
 
 
+
 void main(void)
 {
 	//
@@ -544,8 +579,8 @@ void main(void)
     //
     // Register button call back function
     //
-//    MAP_CAPT_registerCallback(&BTN00, &ButtonEventHandler);
-    MAP_CAPT_registerCallback(&BTN00, &fasterButtonEventHandler);
+    MAP_CAPT_registerCallback(&BTN00, &ButtonEventHandler);
+//    MAP_CAPT_registerCallback(&BTN00, &fasterButtonEventHandler);
 
 	//
 	// Start the CapTIvate application
@@ -553,7 +588,7 @@ void main(void)
 	CAPT_appStart();
 
 
-    //GPIO_LP5012_IC_enable(1);             // EN pin is hard wired pulled up at this solution
+    GPIO_LP5012_IC_enable(1);             // EN pin is hard wired pulled up at this solution
     GPIO_I2C_Init();
     FR2676_LP5012_board_init();
 
@@ -573,12 +608,12 @@ void main(void)
     for(led_ch=0; led_ch<MAX_LED; led_ch++)
     {
         LP5012_I2C_OUTx_color_1(led_ch, LED_OUT_X_MID_LEVEL);      // color level set from 0x80 to 0xc0
-        delay_ms(25);
+        delay_ms(50);
     }
     for(led_ch=0; led_ch<MAX_LED; led_ch++)
     {
         LP5012_I2C_OUTx_color_1(led_ch, 0x00);      // color level set from 0x80 to 0xc0
-        delay_ms(25);
+        delay_ms(50);
     }
 
 

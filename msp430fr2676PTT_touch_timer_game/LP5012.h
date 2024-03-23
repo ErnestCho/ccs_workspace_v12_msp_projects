@@ -91,7 +91,7 @@
 #define SDA_IN      P4DIR &=~ BIT3;             //SDA Input
 #define SDA_OUT     P4DIR |=  BIT3              //SDA Output
 #define SDA_READ    ((P4IN >> 3) & 0x01)        //Read SDA
-#define SDA_PU      P1REN |= BIT3;
+#define SDA_PU      P4REN |= BIT3;
 
 // LP5012 - EN --> Hard wired pull up
 #define LP5012_EN_DIR_OUTPUT        P5DIR |= BIT3

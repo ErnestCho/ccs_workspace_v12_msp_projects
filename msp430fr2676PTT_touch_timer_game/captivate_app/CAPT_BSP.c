@@ -70,8 +70,8 @@ void BSP_configureMCU(void)
     // P1.6: LED2
     // P1.7: LED1
     P1OUT  = (0);
-    P1DIR  = (GPIO_PIN0 | GPIO_PIN6 | GPIO_PIN7);
-    P1SEL0 = (GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5);
+    P1DIR  = (0);//(GPIO_PIN0 | GPIO_PIN6 | GPIO_PIN7);
+    P1SEL0 = (0);//(GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5);
     P1SEL1 = (0);
 
     // P2.0: XOUT
@@ -83,8 +83,8 @@ void BSP_configureMCU(void)
     // P2.6: OUTPUT LOW
     // P2.7: OUTPUT LOW
     P2OUT  =  (0);
-    P2DIR  =  (GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7);
-    P2SEL0 =  (GPIO_PIN0 | GPIO_PIN1);
+    P2DIR  =  (0);//(GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7);
+    P2SEL0 =  (0);//(GPIO_PIN0 | GPIO_PIN1);
     P2SEL1 =  (0);
 
     // P3.0: OUTPUT LOW
@@ -96,7 +96,7 @@ void BSP_configureMCU(void)
     // P3.6: OUTPUT LOW
     // P3.7: OUTPUT LOW
     P3OUT  =  (0);
-    P3DIR  =  (GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7);
+    P3DIR  =  (0);//(GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7);
     P3SEL0 =  (0);
     P3SEL1 =  (0);
 
@@ -109,7 +109,7 @@ void BSP_configureMCU(void)
     // P4.6: OUTPUT LOW
     // P4.7: OUTPUT LOW
     P4OUT  =  (0);
-    P4DIR  =  (GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7);
+    P4DIR  =  (0);//(GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7);
     P4SEL0 =  (0);
     P4SEL1 =  (0);
 
@@ -122,7 +122,7 @@ void BSP_configureMCU(void)
     // P5.6: OUTPUT LOW
     // P5.7: OUTPUT LOW
     P5OUT  =  (0);
-    P5DIR  =  (GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7);
+    P5DIR  =  (0);//(GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7);
     P5SEL0 =  (0);
     P5SEL1 =  (0);
 
@@ -130,7 +130,7 @@ void BSP_configureMCU(void)
     // P6.1: OUTPUT LOW
     // P6.2: OUTPUT LOW
     P6OUT  =  (0);
-    P6DIR  =  (GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2);
+    P6DIR  =  (0);//(GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2);
     P6SEL0 =  (0);
     P6SEL1 =  (0);
 

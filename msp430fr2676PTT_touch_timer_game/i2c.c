@@ -8,8 +8,10 @@
 #include <stdint.h>
 
 #if defined (__MSP430FR2676__)
-#define SDA         BIT2                                                        // i2c sda pin
-#define SCL         BIT3                                                        // i2c scl pin
+// SDA : P1.2,  SCL : P1.3
+#define LCD_I2C_PSEL0   P1SEL0
+#define LCD_SDA         BIT2                                                        // i2c sda pin
+#define LCD_SCL         BIT3                                                        // i2c scl pin
 #elif defined (__MSP430FR2522__)
 #define SDA         BIT2                                                        // i2c sda pin
 #define SCL         BIT3                                                        // i2c scl pin
@@ -26,7 +28,7 @@ unsigned char TxByteCtr;                                                      //
 void i2c_init(void)
 {
 #if defined (__MSP430FR2676__)
-    //P1SEL0   |= SCL + SDA;                                              // Assign I2C pins to USCI_B0
+    LCD_I2C_PSEL0   |= LCD_SCL + LCD_SDA;                               // Assign I2C pins to USCI_B0
 
     UCB0CTLW0 |= UCSWRST;                                               // Enable SW reset
     UCB0CTLW0 |= UCMST + UCMODE_3 + UCSYNC + UCSSEL_2;                  // I2C Master, synchronous mode

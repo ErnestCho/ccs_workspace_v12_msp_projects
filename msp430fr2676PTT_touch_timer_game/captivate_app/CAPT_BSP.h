@@ -55,8 +55,8 @@
 //! functionality.  If XT1 does not start, REFO will be used instead.
 //
 //*****************************************************************************
-// #define DEFAULT_OSC_SELECTION                               (CS_REFOCLK_SELECT)
-#define DEFAULT_OSC_SELECTION                               (CS_XT1CLK_SELECT)
+#define DEFAULT_OSC_SELECTION                               (CS_REFOCLK_SELECT)
+//#define DEFAULT_OSC_SELECTION                               (CS_XT1CLK_SELECT)
 
 //*****************************************************************************
 //

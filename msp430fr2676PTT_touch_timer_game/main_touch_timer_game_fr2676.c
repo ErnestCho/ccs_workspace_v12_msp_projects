@@ -546,6 +546,28 @@ CONST char str_previous[] = "Prv:";                  // 10
 CONST char str_touch_to_start[] = "touch to start";          // 14 : including null
 CONST char str_touch_to_stop[] = "touch & stop";          // 14 : including null
 
+////////////////////////////////
+// rev1 game list and state machine
+////////////////////////////////
+////REV1////////////////////////////
+// Game 1 : touch & run : timer stops when count become 0 and show record results
+// Game 2 : stop watch : stop timer and show
+/////
+// left button : game 1 -> game 2 -> game 1 ...
+// right button : variable change (game 1 : count number),
+// touch button : game execute
+////////////////////////////////
+////REV2////////////////////////////
+// ** player number input menu added and reflect it.
+// Game 1 : touch & run
+// Game 2 : stop watch
+// Game 3 : match number
+// Game 4 : touch 3sec
+/////
+// left button : game 1 -> game 2 -> game 3 -> game 4 -> game 1 ...
+// right button : variable change
+// touch button : game execute
+////////////////////////////////
 
 
 void main(void)

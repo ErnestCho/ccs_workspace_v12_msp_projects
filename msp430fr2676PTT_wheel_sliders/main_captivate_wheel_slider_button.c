@@ -55,6 +55,8 @@
 #include "CAPT_UserConfig.h"
 #include <LP5012.h>
 #include <common.h>
+#include <i2c.h>
+#include <ssd1306.h>
 
 #define DEMO_WHEEL_BTN  (0)
 #define DEMO_0_0_BTN    (1)
@@ -233,26 +235,34 @@ void FR2676_LP5012_board_init()
 
 void main(void)
 {
-	//
-	// Initialize the MCU
-	// BSP_configureMCU() sets up the device IO and clocking
-	// The global interrupt enable is set to allow peripherals
-	// to wake the MCU.
-	//
-	WDTCTL = WDTPW | WDTHOLD;
-	BSP_configureMCU();
+    //
+    // Initialize the MCU
+    // BSP_configureMCU() sets up the device IO and clocking
+    // The global interrupt enable is set to allow peripherals
+    // to wake the MCU.
+    //
+    WDTCTL = WDTPW | WDTHOLD;
+    BSP_configureMCU();
 
     PM5CTL0 &= ~LOCKLPM5;
-   __delay_cycles(10000);
+    __delay_cycles(10000);
 
-	__bis_SR_register(GIE);
 
-	device_init();
+    // OLED initialization
+    i2c_init();                                 // initialize I2C to use with OLED
 
-	//
-	// Start the CapTIvate application
-	//
-	CAPT_appStart();
+    ssd1306_init();                             // Initialize SSD1306 OLED
+    ssd1306_clearDisplay();                     // Clear OLED display
+    delay_ms(1);
+
+    __bis_SR_register(GIE);
+
+    device_init();
+
+    //
+    // Start the CapTIvate application
+    //
+    CAPT_appStart();
 
     GPIO_LP5012_IC_enable(1);             // EN pin is hard wired pulled up at this solution
     GPIO_I2C_Init();
@@ -275,27 +285,27 @@ void main(void)
         delay_ms(50);
     }
 
-	//
-	// Background Loop
-	//
-	while(1)
-	{
-		//
-		// Run the captivate application handler.
-		//
-		CAPT_appHandler();
+    //
+    // Background Loop
+    //
+    while(1)
+    {
+        //
+        // Run the captivate application handler.
+        //
+        CAPT_appHandler();
 
-		//
-		// This is a great place to add in any 
-		// background application code.
-		//
-		__no_operation();
+        //
+        // This is a great place to add in any
+        // background application code.
+        //
+        __no_operation();
 
-		//
-		// End of background loop iteration
-		// Go to sleep if there is nothing left to do
-		//
-		CAPT_appSleep();
-		
-	} // End background loop
+        //
+        // End of background loop iteration
+        // Go to sleep if there is nothing left to do
+        //
+        CAPT_appSleep();
+
+    } // End background loop
 } // End main()
